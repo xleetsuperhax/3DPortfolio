@@ -47,27 +47,34 @@ export function InfoPanel({ config }: Props) {
 
           <p className={styles.description}>{project.description}</p>
 
-          <div className={styles.links}>
-            <a
-              className={`${styles.link} ${styles.linkGithub}`}
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View on GitHub →
-            </a>
-            {project.liveUrl && (
-              <a
-                className={`${styles.link} ${styles.linkLive}`}
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ backgroundColor: accent }}
-              >
-                Live Demo →
-              </a>
-            )}
-          </div>
+          {project.links && project.links.length > 0 && (
+            <div className={styles.links}>
+              {project.links.map((link, i) =>
+                i === 0 ? (
+                  <a
+                    key={link.url}
+                    className={`${styles.link} ${styles.linkPrimary}`}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ backgroundColor: accent }}
+                  >
+                    {link.label} →
+                  </a>
+                ) : (
+                  <a
+                    key={link.url}
+                    className={`${styles.link} ${styles.linkSecondary}`}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label} →
+                  </a>
+                )
+              )}
+            </div>
+          )}
         </>
       )}
     </div>
