@@ -1,36 +1,24 @@
-import { useRef } from 'react'
 import { useSceneStore } from '../hooks/useSceneStore'
 
-function nudge(alpha?: number, zoom?: number) {
-  window.dispatchEvent(new CustomEvent('camera:nudge', { detail: { alpha, zoom } }))
+function navStart(direction: string) {
+  window.dispatchEvent(new CustomEvent('camera:navStart', { detail: { direction } }))
+}
+
+function navStop(direction: string) {
+  window.dispatchEvent(new CustomEvent('camera:navStop', { detail: { direction } }))
 }
 
 interface NavButtonProps {
   label: string
-  alpha?: number
-  zoom?: number
+  direction: string
 }
 
-function NavButton({ label, alpha, zoom }: NavButtonProps) {
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
-
-  const start = () => {
-    nudge(alpha, zoom)
-    intervalRef.current = setInterval(() => nudge(alpha, zoom), 50)
-  }
-
-  const stop = () => {
-    if (intervalRef.current !== null) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null
-    }
-  }
-
+function NavButton({ label, direction }: NavButtonProps) {
   return (
     <button
-      onPointerDown={start}
-      onPointerUp={stop}
-      onPointerLeave={stop}
+      onPointerDown={() => navStart(direction)}
+      onPointerUp={() => navStop(direction)}
+      onPointerLeave={() => navStop(direction)}
       style={{
         width: 48,
         height: 48,
@@ -73,22 +61,32 @@ export function NavigationControls() {
     <div
       style={{
         position: 'fixed',
-        bottom: 28,
+        bottom: 100,
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
-        gap: 8,
+        flexDirection: 'column',
+        gap: 6,
         alignItems: 'center',
         zIndex: 10,
         pointerEvents: 'auto',
       }}
     >
-      <NavButton label="←" alpha={-0.05} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <NavButton label="+" zoom={-0.5} />
-        <NavButton label="−" zoom={0.5} />
+      {/* Pan up */}
+      <NavButton label="↑" direction="panUp" />
+
+      {/* Rotate + zoom row */}
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <NavButton label="←" direction="rotateLeft" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <NavButton label="+" direction="zoomIn" />
+          <NavButton label="−" direction="zoomOut" />
+        </div>
+        <NavButton label="→" direction="rotateRight" />
       </div>
-      <NavButton label="→" alpha={0.05} />
+
+      {/* Pan down */}
+      <NavButton label="↓" direction="panDown" />
     </div>
   )
 }

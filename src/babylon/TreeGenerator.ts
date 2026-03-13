@@ -31,7 +31,7 @@ function placeTree(scene: BABYLON.Scene, x: number, z: number, scale: number, id
   foliageLow.material = makeTreeMaterial(scene, '#2d5a1b', `foliage_low_${id}`)
   foliageLow.isPickable = false
 
-  // Upper foliage (narrower, slightly different green)
+  // Upper foliage (narrower, slightly different green) — pickable for click detection
   const foliageHigh = BABYLON.MeshBuilder.CreateBox(
     `tree_foliage_high_${id}`,
     { width: 2 * scale, height: 2 * scale, depth: 2 * scale },
@@ -39,7 +39,11 @@ function placeTree(scene: BABYLON.Scene, x: number, z: number, scale: number, id
   )
   foliageHigh.position = new BABYLON.Vector3(x, groundY + 2.5 * scale + 2.5 * scale + 1 * scale, z)
   foliageHigh.material = makeTreeMaterial(scene, '#3d7222', `foliage_high_${id}`)
-  foliageHigh.isPickable = false
+  foliageHigh.isPickable = true
+  foliageHigh.metadata = {
+    treeId: id,
+    treeTopY: foliageHigh.position.y + scale,
+  }
 }
 
 // Deterministic tree positions — inner ring + outer ring
@@ -73,4 +77,92 @@ export function populateTrees(scene: BABYLON.Scene, arcRadius: number): void {
     const z = Math.cos(angle) * radius
     placeTree(scene, x, z, def.scale, String(i))
   }
+}
+
+export function spawnApple(scene: BABYLON.Scene, x: number, y: number, z: number): void {
+  const size = 0.7
+  const apple = BABYLON.MeshBuilder.CreatePlane(`apple_${Date.now()}_${Math.random()}`, { width: size, height: size }, scene)
+  apple.position = new BABYLON.Vector3(x, y + 0.5, z)
+  apple.billboardMode = BABYLON.AbstractMesh.BILLBOARDMODE_ALL
+
+  // 16×16 pixel art apple texture
+  const native = 16
+  const tex = new BABYLON.DynamicTexture(`apple_tex_${Date.now()}`, { width: native, height: native }, scene, false)
+  tex.updateSamplingMode(BABYLON.Texture.NEAREST_SAMPLINGMODE)
+  tex.hasAlpha = true
+
+  const ctx = tex.getContext() as CanvasRenderingContext2D
+  // Transparent background
+  ctx.clearRect(0, 0, native, native)
+
+  // Pixel colors
+  const stem = '#5a3219'
+  const leaf = '#3d7222'
+  const red = '#cc2200'
+  const highlight = '#ff6644'
+  const shadow = '#880000'
+
+  // Stem: (6,0), (6,1)
+  ctx.fillStyle = stem
+  ctx.fillRect(6, 0, 1, 2)
+
+  // Leaf: (5,1)
+  ctx.fillStyle = leaf
+  ctx.fillRect(5, 1, 1, 1)
+
+  // Apple body — roughly circular, centered around (5, 5)
+  // Row 2: cols 3–7
+  ctx.fillStyle = red
+  ctx.fillRect(3, 2, 5, 1)
+  // Row 3: cols 2–8
+  ctx.fillRect(2, 3, 7, 1)
+  // Row 4: cols 2–8
+  ctx.fillRect(2, 4, 7, 1)
+  // Row 5: cols 2–8
+  ctx.fillRect(2, 5, 7, 1)
+  // Row 6: cols 2–8
+  ctx.fillRect(2, 6, 7, 1)
+  // Row 7: cols 3–7
+  ctx.fillRect(3, 7, 5, 1)
+
+  // Highlight pixel
+  ctx.fillStyle = highlight
+  ctx.fillRect(3, 3, 1, 1)
+
+  // Shadow pixel
+  ctx.fillStyle = shadow
+  ctx.fillRect(7, 6, 1, 1)
+
+  tex.update()
+
+  const mat = new BABYLON.StandardMaterial(`apple_mat_${Date.now()}`, scene)
+  mat.diffuseTexture = tex
+  mat.emissiveColor = BABYLON.Color3.White()
+  mat.disableLighting = true
+  mat.backFaceCulling = false
+
+  apple.material = mat
+  apple.isPickable = false
+
+  // Float upward slightly over the lifetime
+  const floatAnim = new BABYLON.Animation(
+    'appleFloat',
+    'position.y',
+    60,
+    BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+  )
+  floatAnim.setKeys([
+    { frame: 0, value: apple.position.y },
+    { frame: 300, value: apple.position.y + 1.5 },
+  ])
+  apple.animations = [floatAnim]
+  scene.beginAnimation(apple, 0, 300, false)
+
+  // Despawn after 5 seconds
+  setTimeout(() => {
+    apple.dispose()
+    tex.dispose()
+    mat.dispose()
+  }, 5000)
 }

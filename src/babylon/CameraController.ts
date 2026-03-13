@@ -4,9 +4,12 @@ import { useSceneStore } from '../hooks/useSceneStore'
 export class CameraController {
   private camera: BABYLON.ArcRotateCamera
   private keysDown = new Set<string>()
+  private navActive = new Set<string>()
   private keyHandler: ((e: KeyboardEvent) => void) | null = null
   private keyUpHandler: ((e: KeyboardEvent) => void) | null = null
   private nudgeHandler: ((e: Event) => void) | null = null
+  private navStartHandler: ((e: Event) => void) | null = null
+  private navStopHandler: ((e: Event) => void) | null = null
   private renderObserver: BABYLON.Observer<BABYLON.Scene> | null = null
 
   constructor(scene: BABYLON.Scene, arcRadius: number) {
@@ -39,7 +42,7 @@ export class CameraController {
     window.addEventListener('keydown', this.keyHandler)
     window.addEventListener('keyup', this.keyUpHandler)
 
-    // Custom event nudge (from on-screen nav buttons)
+    // Custom event nudge (for one-shot external nudges)
     this.nudgeHandler = (e: Event) => {
       if (!useSceneStore.getState().cameraInputEnabled) return
       const detail = (e as CustomEvent).detail as { alpha?: number; zoom?: number }
@@ -56,18 +59,49 @@ export class CameraController {
     }
     window.addEventListener('camera:nudge', this.nudgeHandler)
 
-    // Per-frame keyboard processing
+    // Nav button start/stop events (from on-screen nav buttons)
+    this.navStartHandler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { direction: string }
+      this.navActive.add(detail.direction)
+    }
+    this.navStopHandler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { direction: string }
+      this.navActive.delete(detail.direction)
+    }
+    window.addEventListener('camera:navStart', this.navStartHandler)
+    window.addEventListener('camera:navStop', this.navStopHandler)
+
+    // Per-frame keyboard + nav button processing
     this.renderObserver = scene.onBeforeRenderObservable.add(() => {
       if (!useSceneStore.getState().cameraInputEnabled) return
+
+      const lower = this.camera.lowerRadiusLimit ?? 0
+      const upper = this.camera.upperRadiusLimit ?? Infinity
+
+      // Arrow key input
       if (this.keysDown.has('ArrowLeft')) this.camera.alpha -= 0.04
       if (this.keysDown.has('ArrowRight')) this.camera.alpha += 0.04
       if (this.keysDown.has('ArrowUp')) {
-        const newRadius = this.camera.radius - 0.3
-        this.camera.radius = Math.max(this.camera.lowerRadiusLimit ?? 0, newRadius)
+        this.camera.radius = Math.max(lower, this.camera.radius - 0.3)
       }
       if (this.keysDown.has('ArrowDown')) {
-        const newRadius = this.camera.radius + 0.3
-        this.camera.radius = Math.min(this.camera.upperRadiusLimit ?? Infinity, newRadius)
+        this.camera.radius = Math.min(upper, this.camera.radius + 0.3)
+      }
+
+      // Nav button hold input (smooth, frame-rate consistent)
+      if (this.navActive.has('rotateLeft')) this.camera.alpha -= 0.015
+      if (this.navActive.has('rotateRight')) this.camera.alpha += 0.015
+      if (this.navActive.has('zoomIn')) {
+        this.camera.radius = Math.max(lower, this.camera.radius - 0.12)
+      }
+      if (this.navActive.has('zoomOut')) {
+        this.camera.radius = Math.min(upper, this.camera.radius + 0.12)
+      }
+      if (this.navActive.has('panUp')) {
+        this.camera.target.y = Math.min(4.0, this.camera.target.y + 0.04)
+      }
+      if (this.navActive.has('panDown')) {
+        this.camera.target.y = Math.max(-2.0, this.camera.target.y - 0.04)
       }
     })
   }
@@ -80,6 +114,8 @@ export class CameraController {
       )
     } else {
       this.camera.detachControl()
+      // Clear any held nav states when input is disabled
+      this.navActive.clear()
     }
   }
 
@@ -91,6 +127,8 @@ export class CameraController {
     if (this.keyHandler) window.removeEventListener('keydown', this.keyHandler)
     if (this.keyUpHandler) window.removeEventListener('keyup', this.keyUpHandler)
     if (this.nudgeHandler) window.removeEventListener('camera:nudge', this.nudgeHandler)
+    if (this.navStartHandler) window.removeEventListener('camera:navStart', this.navStartHandler)
+    if (this.navStopHandler) window.removeEventListener('camera:navStop', this.navStopHandler)
     if (this.renderObserver) {
       this.camera.getScene().onBeforeRenderObservable.remove(this.renderObserver)
     }
