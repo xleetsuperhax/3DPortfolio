@@ -35,13 +35,41 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## Customization
 
-Edit `src/config/projects.ts` to update portfolio content and layout:
+Edit `src/config/projects.ts` to update portfolio content and layout.
 
-- `gallery.layout` — `'arc'` | `'grid'` | `'scatter'`
-- `gallery.arcRadius` — radius of the arc layout
-- `gallery.cardSpacing` — spacing between cards
-- `gallery.backgroundColor` — scene background hex color
-- `projects[]` — array of project entries (title, description, tech, links, accent color)
+### Gallery settings
+
+| Field | Type | Description |
+|---|---|---|
+| `layout` | `'arc' \| 'grid' \| 'scatter'` | Card arrangement in the scene |
+| `arcRadius` | `number` | Radius of the arc layout (world units) |
+| `cardSpacing` | `number` | Distance between cards (world units) |
+| `backgroundColor` | `string` | Scene background hex color |
+
+### Adding a card
+
+Each entry in `projects[]` becomes a card in the scene:
+
+```ts
+{
+  id: 'my-project',           // unique identifier (required)
+  title: 'My Project',        // card title (required)
+  description: 'What it does and why it matters.',  // shown in the panel
+  tech: ['React', 'Node'],    // tech tags shown as pills
+  year: 2025,                 // displayed above the title
+  accentColor: '#7c3aed',     // card accent and tag color (hex)
+  featured: true,             // enlarges the card slightly (optional)
+  links: [                    // buttons shown in the side panel (optional)
+    { label: 'Live Demo',     url: 'https://example.com' },
+    { label: 'GitHub',        url: 'https://github.com/you/repo' },
+    { label: 'Docs',          url: 'https://docs.example.com' },
+  ],
+}
+```
+
+**Link rendering:** The first link gets a filled button (using `accentColor`), all subsequent links are outlined. You can add as many links as needed — documentation, npm packages, blog posts, etc.
+
+Cards are rendered in the order they appear in the array. Remove, reorder, or duplicate entries freely.
 
 ## Tech Stack
 

@@ -1,10 +1,14 @@
+export interface ProjectLink {
+  label: string;
+  url: string;
+}
+
 export interface ProjectConfig {
   id: string;
   title: string;
   description: string;
   tech: string[];
-  githubUrl: string;
-  liveUrl?: string;
+  links?: ProjectLink[];
   year: number;
   accentColor?: string;
   featured?: boolean;

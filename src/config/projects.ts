@@ -25,7 +25,9 @@ const config: AppConfig = {
       description:
         'An interactive 3D space for exploring personal projects, built with BabylonJS and React.',
       tech: ['BabylonJS', 'React', 'TypeScript'],
-      githubUrl: 'https://github.com/xleetsuperhax/3dcv',
+      links: [
+        { label: 'View on GitHub', url: 'https://github.com/xleetsuperhax/3dcv' },
+      ],
       year: 2026,
       accentColor: '#7c3aed',
       featured: true,
@@ -36,8 +38,10 @@ const config: AppConfig = {
       description:
         'Robot Framework Library for evaluating the quality of LLM responses',
       tech: ['Python', 'Robot Framework'],
-      githubUrl: 'https://github.com/xleetsuperhax/RoboAssay',
-      liveUrl: 'https://example.com',
+      links: [
+        { label: 'Live Demo', url: 'https://example.com' },
+        { label: 'View on GitHub', url: 'https://github.com/xleetsuperhax/RoboAssay' },
+      ],
       year: 2026,
       accentColor: '#0ea5e9',
     },
@@ -47,7 +51,9 @@ const config: AppConfig = {
       description:
         'Robot Framework Library for testing web accessibility with WCAG 2.1 Standard',
       tech: ['Python', 'Robot Framework', 'Redis'],
-      githubUrl: 'https://github.com/xleetsuperhax/RoboWCAG',
+      links: [
+        { label: 'View on GitHub', url: 'https://github.com/xleetsuperhax/RoboWCAG' },
+      ],
       year: 2025,
       accentColor: '#10b981',
     },
@@ -57,7 +63,9 @@ const config: AppConfig = {
       description:
         'A side project placeholder. Fill in your tech stack, description, and GitHub URL.',
       tech: ['Place', 'Holder'],
-      githubUrl: 'https://github.com/yourusername/side',
+      links: [
+        { label: 'View on GitHub', url: 'https://github.com/yourusername/side' },
+      ],
       year: 2023,
       accentColor: '#f59e0b',
     },
@@ -67,7 +75,9 @@ const config: AppConfig = {
       description:
         'An open source tool placeholder. Describe what problem it solves for other developers.',
       tech: ['Place', 'Holder'],
-      githubUrl: 'https://github.com/yourusername/tool',
+      links: [
+        { label: 'View on GitHub', url: 'https://github.com/yourusername/tool' },
+      ],
       year: 2023,
       accentColor: '#ef4444',
     },
