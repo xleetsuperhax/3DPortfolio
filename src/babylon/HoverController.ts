@@ -2,6 +2,7 @@ import * as BABYLON from '@babylonjs/core'
 import { useSceneStore } from '../hooks/useSceneStore'
 import { CameraController } from './CameraController'
 import type { ProjectGallery } from './ProjectGallery'
+import { spawnApple } from './TreeGenerator'
 
 export class HoverController {
   private scene: BABYLON.Scene
@@ -56,10 +57,17 @@ export class HoverController {
       if (id) {
         useSceneStore.getState().setSelectedProject(id)
       } else {
-        // Tapped empty space - close panel only if not dragging
-        const state = useSceneStore.getState()
-        if (state.selectedProjectId) {
-          useSceneStore.getState().setSelectedProject(null)
+        // Check if a tree was tapped
+        const treeMeta = pick?.pickedMesh?.metadata as { treeId?: string; treeTopY?: number } | null
+        if (treeMeta?.treeId !== undefined && pick?.pickedMesh) {
+          const pos = pick.pickedMesh.position
+          spawnApple(this.scene, pos.x, treeMeta.treeTopY ?? pos.y, pos.z)
+        } else {
+          // Tapped empty space - close panel only if not dragging
+          const state = useSceneStore.getState()
+          if (state.selectedProjectId) {
+            useSceneStore.getState().setSelectedProject(null)
+          }
         }
       }
     }

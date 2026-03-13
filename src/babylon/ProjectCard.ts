@@ -80,7 +80,20 @@ export class ProjectCard {
     faceMat.disableLighting = true
     this.faceMesh.material = faceMat
 
-    // Back face (dark, no content)
+    // Back face — mirrored layers to match front
+    // Back border (accent frame, larger, behind back bg from the rear camera's perspective)
+    const backBorder = BABYLON.MeshBuilder.CreatePlane(
+      `card_back_border_${project.id}`,
+      { width: CARD_W + BORDER_PAD * 2, height: CARD_H + BORDER_PAD * 2 },
+      scene,
+    )
+    backBorder.parent = this.root
+    backBorder.rotation.y = Math.PI
+    backBorder.position.z = 0.005
+    backBorder.isPickable = false
+    backBorder.material = createAccentMaterial(scene, accent, `back_${project.id}`)
+
+    // Back bg (dark fill)
     const back = BABYLON.MeshBuilder.CreatePlane(
       `card_back_${project.id}`,
       { width: CARD_W, height: CARD_H },
@@ -91,14 +104,47 @@ export class ProjectCard {
     back.position.z = 0.01
     back.isPickable = false
     back.material = createCardBackMaterial(scene, `back_${project.id}`)
+
+    // Back content face (mirrored DynamicTexture so text reads correctly from behind)
+    const backFace = BABYLON.MeshBuilder.CreatePlane(
+      `card_back_face_${project.id}`,
+      { width: CARD_W, height: CARD_H },
+      scene,
+    )
+    backFace.parent = this.root
+    backFace.rotation.y = Math.PI
+    backFace.position.z = 0.02
+    backFace.isPickable = false
+
+    const backTexture = new BABYLON.DynamicTexture(
+      `back_tex_${project.id}`,
+      { width: TEX_W, height: TEX_H },
+      scene,
+      true,
+    )
+    backTexture.hasAlpha = false
+    this.drawContent(backTexture, project, accent, true)
+
+    const backFaceMat = new BABYLON.StandardMaterial(`back_facemat_${project.id}`, scene)
+    backFaceMat.emissiveTexture = backTexture
+    backFaceMat.diffuseColor = BABYLON.Color3.Black()
+    backFaceMat.specularColor = BABYLON.Color3.Black()
+    backFaceMat.disableLighting = true
+    backFace.material = backFaceMat
   }
 
   private drawContent(
     texture: BABYLON.DynamicTexture,
     project: ProjectConfig,
     accent: string,
+    mirror = false,
   ): void {
     const ctx = texture.getContext() as CanvasRenderingContext2D
+    if (mirror) {
+      ctx.save()
+      ctx.translate(TEX_W, 0)
+      ctx.scale(-1, 1)
+    }
 
     // Card background (slightly elevated so it's visible against scene)
     ctx.fillStyle = '#111130'
@@ -155,6 +201,7 @@ export class ProjectCard {
       tagX += tw + 8
     }
 
+    if (mirror) ctx.restore()
     texture.update()
   }
 
