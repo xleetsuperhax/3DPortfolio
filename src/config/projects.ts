@@ -39,7 +39,7 @@ const config: AppConfig = {
         'Robot Framework Library for evaluating the quality of LLM responses',
       tech: ['Python', 'Robot Framework'],
       links: [
-        { label: 'Live Demo', url: 'https://example.com' },
+        { label: 'Documentation', url: 'https://xleetsuperhax.github.io/RoboAssay' },
         { label: 'View on GitHub', url: 'https://github.com/xleetsuperhax/RoboAssay' },
       ],
       year: 2026,
@@ -50,7 +50,7 @@ const config: AppConfig = {
       title: 'RoboWCAG',
       description:
         'Robot Framework Library for testing web accessibility with WCAG 2.1 Standard',
-      tech: ['Python', 'Robot Framework', 'Redis'],
+      tech: ['Python', 'Robot Framework'],
       links: [
         { label: 'View on GitHub', url: 'https://github.com/xleetsuperhax/RoboWCAG' },
       ],
