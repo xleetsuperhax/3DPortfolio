@@ -23,7 +23,7 @@ export class CameraController {
     )
 
     this.camera.lowerBetaLimit = 0.4
-    this.camera.upperBetaLimit = 1.4
+    this.camera.upperBetaLimit = 1.6
     this.camera.lowerRadiusLimit = arcRadius * 0.5
     this.camera.upperRadiusLimit = arcRadius * 2.0
     this.camera.inertia = 0.5
@@ -102,6 +102,15 @@ export class CameraController {
       }
       if (this.navActive.has('panDown')) {
         this.camera.target.y = Math.max(-2.0, this.camera.target.y - 0.04)
+      }
+      const panSpeed = 0.04
+      if (this.navActive.has('panLeft')) {
+        this.camera.target.x += Math.sin(this.camera.alpha) * panSpeed
+        this.camera.target.z -= Math.cos(this.camera.alpha) * panSpeed
+      }
+      if (this.navActive.has('panRight')) {
+        this.camera.target.x -= Math.sin(this.camera.alpha) * panSpeed
+        this.camera.target.z += Math.cos(this.camera.alpha) * panSpeed
       }
     })
   }

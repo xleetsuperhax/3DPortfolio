@@ -144,25 +144,28 @@ export function spawnApple(scene: BABYLON.Scene, x: number, y: number, z: number
   apple.material = mat
   apple.isPickable = false
 
-  // Float upward slightly over the lifetime
-  const floatAnim = new BABYLON.Animation(
-    'appleFloat',
+  // Fall downward with gravity-like acceleration
+  const fallAnim = new BABYLON.Animation(
+    'appleFall',
     'position.y',
     60,
     BABYLON.Animation.ANIMATIONTYPE_FLOAT,
     BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
   )
-  floatAnim.setKeys([
+  const easing = new BABYLON.QuadraticEase()
+  easing.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEIN)
+  fallAnim.setEasingFunction(easing)
+  fallAnim.setKeys([
     { frame: 0, value: apple.position.y },
-    { frame: 300, value: apple.position.y + 1.5 },
+    { frame: 100, value: -1.0 },
   ])
-  apple.animations = [floatAnim]
-  scene.beginAnimation(apple, 0, 300, false)
+  apple.animations = [fallAnim]
+  scene.beginAnimation(apple, 0, 100, false)
 
-  // Despawn after 5 seconds
+  // Despawn after 10 seconds
   setTimeout(() => {
     apple.dispose()
     tex.dispose()
     mat.dispose()
-  }, 5000)
+  }, 10000)
 }
