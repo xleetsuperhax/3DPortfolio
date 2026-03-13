@@ -27,6 +27,11 @@ export class HoverController {
     useSceneStore.subscribe((state) => {
       this.cameraController.setInputEnabled(state.cameraInputEnabled)
     })
+
+    // Apply initial state (subscribe only fires on changes, not on mount)
+    this.cameraController.setInputEnabled(
+      useSceneStore.getState().cameraInputEnabled,
+    )
   }
 
   private handlePointer(info: BABYLON.PointerInfo): void {
