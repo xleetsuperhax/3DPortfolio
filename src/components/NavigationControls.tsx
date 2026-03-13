@@ -66,27 +66,30 @@ export function NavigationControls() {
         transform: 'translateX(-50%)',
         display: 'flex',
         flexDirection: 'column',
-        gap: 6,
+        gap: 8,
         alignItems: 'center',
         zIndex: 10,
         pointerEvents: 'auto',
       }}
     >
-      {/* Pan up */}
-      <NavButton label="↑" direction="panUp" />
-
-      {/* Rotate + zoom row */}
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-        <NavButton label="←" direction="rotateLeft" />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <NavButton label="+" direction="zoomIn" />
-          <NavButton label="−" direction="zoomOut" />
+      {/* D-pad for panning */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' }}>
+        <NavButton label="↑" direction="panUp" />
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          <NavButton label="←" direction="panLeft" />
+          <div style={{ width: 48, height: 48 }} />
+          <NavButton label="→" direction="panRight" />
         </div>
-        <NavButton label="→" direction="rotateRight" />
+        <NavButton label="↓" direction="panDown" />
       </div>
 
-      {/* Pan down */}
-      <NavButton label="↓" direction="panDown" />
+      {/* Camera controls: rotate + zoom */}
+      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <NavButton label="↺" direction="rotateLeft" />
+        <NavButton label="+" direction="zoomIn" />
+        <NavButton label="−" direction="zoomOut" />
+        <NavButton label="↻" direction="rotateRight" />
+      </div>
     </div>
   )
 }
