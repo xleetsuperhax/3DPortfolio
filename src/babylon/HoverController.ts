@@ -58,10 +58,19 @@ export class HoverController {
         useSceneStore.getState().setSelectedProject(id)
       } else {
         // Check if a tree was tapped
-        const treeMeta = pick?.pickedMesh?.metadata as { treeId?: string; treeTopY?: number } | null
+        const treeMeta = pick?.pickedMesh?.metadata as {
+          treeId?: string; treeTopY?: number
+          foliageMinY?: number; foliageMaxY?: number; foliageRadius?: number
+          treeX?: number; treeZ?: number
+        } | null
         if (treeMeta?.treeId !== undefined && pick?.pickedMesh) {
           const pos = pick.pickedMesh.position
-          spawnApple(this.scene, pos.x, treeMeta.treeTopY ?? pos.y, pos.z)
+          const rx = (Math.random() * 2 - 1) * (treeMeta.foliageRadius ?? 1.5)
+          const rz = (Math.random() * 2 - 1) * (treeMeta.foliageRadius ?? 1.5)
+          const minY = treeMeta.foliageMinY ?? pos.y
+          const maxY = treeMeta.foliageMaxY ?? (treeMeta.treeTopY ?? pos.y)
+          const ry = minY + Math.random() * (maxY - minY)
+          spawnApple(this.scene, (treeMeta.treeX ?? pos.x) + rx, ry, (treeMeta.treeZ ?? pos.z) + rz)
         } else {
           // Tapped empty space - close panel only if not dragging
           const state = useSceneStore.getState()

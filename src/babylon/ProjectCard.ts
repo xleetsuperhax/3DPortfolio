@@ -123,7 +123,7 @@ export class ProjectCard {
       true,
     )
     backTexture.hasAlpha = false
-    this.drawContent(backTexture, project, accent, true)
+    this.drawContent(backTexture, project, accent)
 
     const backFaceMat = new BABYLON.StandardMaterial(`back_facemat_${project.id}`, scene)
     backFaceMat.emissiveTexture = backTexture

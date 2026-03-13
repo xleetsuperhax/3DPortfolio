@@ -43,6 +43,11 @@ function placeTree(scene: BABYLON.Scene, x: number, z: number, scale: number, id
   foliageHigh.metadata = {
     treeId: id,
     treeTopY: foliageHigh.position.y + scale,
+    foliageMinY: foliageLow.position.y - 1.25 * scale,
+    foliageMaxY: foliageHigh.position.y + scale,
+    foliageRadius: 1.5 * scale,
+    treeX: x,
+    treeZ: z,
   }
 }
 
@@ -82,7 +87,7 @@ export function populateTrees(scene: BABYLON.Scene, arcRadius: number): void {
 export function spawnApple(scene: BABYLON.Scene, x: number, y: number, z: number): void {
   const size = 0.7
   const apple = BABYLON.MeshBuilder.CreatePlane(`apple_${Date.now()}_${Math.random()}`, { width: size, height: size }, scene)
-  apple.position = new BABYLON.Vector3(x, y + 0.5, z)
+  apple.position = new BABYLON.Vector3(x, y, z)
   apple.billboardMode = BABYLON.AbstractMesh.BILLBOARDMODE_ALL
 
   // 16×16 pixel art apple texture
@@ -160,12 +165,51 @@ export function spawnApple(scene: BABYLON.Scene, x: number, y: number, z: number
     { frame: 100, value: -1.0 },
   ])
   apple.animations = [fallAnim]
-  scene.beginAnimation(apple, 0, 100, false)
+  scene.beginAnimation(apple, 0, 100, false, 1, () => {
+    // Roll a short distance after landing
+    const rollAngle = Math.random() * Math.PI * 2
+    const rollDist = 0.3 + Math.random() * 1.2
+    const rollFrames = 70
+    const rollEase = new BABYLON.QuadraticEase()
+    rollEase.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT)
 
-  // Despawn after 10 seconds
+    const rollX = new BABYLON.Animation(
+      'appleRollX', 'position.x', 60,
+      BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+    )
+    rollX.setEasingFunction(rollEase)
+    rollX.setKeys([
+      { frame: 0, value: apple.position.x },
+      { frame: rollFrames, value: apple.position.x + Math.cos(rollAngle) * rollDist },
+    ])
+
+    const rollZ = new BABYLON.Animation(
+      'appleRollZ', 'position.z', 60,
+      BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+    )
+    rollZ.setEasingFunction(rollEase)
+    rollZ.setKeys([
+      { frame: 0, value: apple.position.z },
+      { frame: rollFrames, value: apple.position.z + Math.sin(rollAngle) * rollDist },
+    ])
+
+    scene.beginDirectAnimation(apple, [rollX, rollZ], 0, rollFrames, false)
+  })
+
+  // Fade out at 19s and dispose at 20s
   setTimeout(() => {
-    apple.dispose()
-    tex.dispose()
-    mat.dispose()
-  }, 10000)
+    const fadeAnim = new BABYLON.Animation(
+      'appleFade', 'visibility', 60,
+      BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+    )
+    fadeAnim.setKeys([
+      { frame: 0, value: 1 },
+      { frame: 60, value: 0 },
+    ])
+    scene.beginDirectAnimation(apple, [fadeAnim], 0, 60, false, 1, () => {
+      apple.dispose()
+      tex.dispose()
+      mat.dispose()
+    })
+  }, 19000)
 }
