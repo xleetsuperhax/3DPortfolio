@@ -3,7 +3,8 @@ import { AppConfig } from '../types'
 import { CameraController } from './CameraController'
 import { ProjectGallery } from './ProjectGallery'
 import { HoverController } from './HoverController'
-import { createFloorMaterial } from './materials'
+import { createPixelGrassMaterial, createSkyboxMaterial } from './materials'
+import { populateTrees } from './TreeGenerator'
 
 export class SceneManager {
   private engine: BABYLON.Engine
@@ -24,11 +25,7 @@ export class SceneManager {
     }
 
     this.scene = new BABYLON.Scene(this.engine)
-
-    const bgColor = BABYLON.Color4.FromHexString(
-      config.gallery.backgroundColor + 'ff',
-    )
-    this.scene.clearColor = bgColor
+    this.scene.clearColor = new BABYLON.Color4(0, 0, 0, 1)
 
     // Lighting
     const hemi = new BABYLON.HemisphericLight(
@@ -51,18 +48,31 @@ export class SceneManager {
       config.gallery.arcRadius,
     )
 
-    // Floor
+    // Skybox — large sphere with pixel art sky texture on the inside
+    const skybox = BABYLON.MeshBuilder.CreateSphere(
+      'skybox',
+      { diameter: 900, segments: 8 },
+      this.scene,
+    )
+    skybox.material = createSkyboxMaterial(this.scene)
+    skybox.isPickable = false
+    skybox.infiniteDistance = true
+
+    // Floor — pixel art grass
     const floor = BABYLON.MeshBuilder.CreateGround(
       'floor',
       { width: 200, height: 200 },
       this.scene,
     )
-    floor.material = createFloorMaterial(this.scene)
+    floor.material = createPixelGrassMaterial(this.scene)
     floor.position.y = -1.5
     floor.isPickable = false
 
     // Gallery
     this.gallery = new ProjectGallery(this.scene, config)
+
+    // Trees
+    populateTrees(this.scene, config.gallery.arcRadius)
 
     // Glow layer — whitelist only accent border meshes so face/bg/back never
     // interfere with the bloom pass (avoids customEmissiveColorSelector side-effects)
@@ -92,6 +102,7 @@ export class SceneManager {
   }
 
   dispose(): void {
+    this.cameraController.dispose()
     this.hoverController.dispose()
     this.gallery.dispose()
     this.scene.dispose()

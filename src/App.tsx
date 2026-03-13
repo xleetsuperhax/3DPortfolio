@@ -3,6 +3,7 @@ import { InfoPanel } from './components/InfoPanel'
 import { NavHint } from './components/NavHint'
 import { InstructionsDialog } from './components/InstructionsDialog'
 import { InfoButton } from './components/InfoButton'
+import { NavigationControls } from './components/NavigationControls'
 import config from './config/projects'
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
       <NavHint />
       <InfoButton />
       <InstructionsDialog />
+      <NavigationControls />
     </div>
   )
 }
