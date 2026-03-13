@@ -21,34 +21,34 @@ const config: AppConfig = {
   projects: [
     {
       id: 'project-1',
-      title: '3D Portfolio',
+      title: '3D Portfolio (the one you are in right now!',
       description:
         'An interactive 3D space for exploring personal projects, built with BabylonJS and React.',
       tech: ['BabylonJS', 'React', 'TypeScript'],
-      githubUrl: 'https://github.com/yourusername/3dcv',
-      year: 2025,
+      githubUrl: 'https://github.com/xleetsuperhax/3dcv',
+      year: 2026,
       accentColor: '#7c3aed',
       featured: true,
     },
     {
       id: 'project-2',
-      title: 'Example Project',
+      title: 'RoboAssay',
       description:
-        'Replace this with a real project. Add a description that explains what it does and why.',
-      tech: ['Node.js', 'PostgreSQL', 'Docker'],
-      githubUrl: 'https://github.com/yourusername/example',
+        'Robot Framework Library for evaluating the quality of LLM responses',
+      tech: ['Python', 'Robot Framework'],
+      githubUrl: 'https://github.com/xleetsuperhax/RoboAssay',
       liveUrl: 'https://example.com',
-      year: 2024,
+      year: 2026,
       accentColor: '#0ea5e9',
     },
     {
       id: 'project-3',
-      title: 'Another Project',
+      title: 'RoboWCAG',
       description:
-        'Another placeholder. Swap this out with one of your real projects and update the fields.',
-      tech: ['Python', 'FastAPI', 'Redis'],
-      githubUrl: 'https://github.com/yourusername/another',
-      year: 2024,
+        'Robot Framework Library for testing web accessibility with WCAG 2.1 Standard',
+      tech: ['Python', 'Robot Framework', 'Redis'],
+      githubUrl: 'https://github.com/xleetsuperhax/RoboWCAG',
+      year: 2025,
       accentColor: '#10b981',
     },
     {
@@ -56,7 +56,7 @@ const config: AppConfig = {
       title: 'Side Project',
       description:
         'A side project placeholder. Fill in your tech stack, description, and GitHub URL.',
-      tech: ['Rust', 'WebAssembly'],
+      tech: ['Place', 'Holder'],
       githubUrl: 'https://github.com/yourusername/side',
       year: 2023,
       accentColor: '#f59e0b',
@@ -66,7 +66,7 @@ const config: AppConfig = {
       title: 'Open Source Tool',
       description:
         'An open source tool placeholder. Describe what problem it solves for other developers.',
-      tech: ['Go', 'gRPC', 'Kubernetes'],
+      tech: ['Place', 'Holder'],
       githubUrl: 'https://github.com/yourusername/tool',
       year: 2023,
       accentColor: '#ef4444',
