@@ -2,23 +2,28 @@ import * as BABYLON from '@babylonjs/core'
 import { useSceneStore } from '../hooks/useSceneStore'
 import { CameraController } from './CameraController'
 import type { ProjectGallery } from './ProjectGallery'
+import type { AboutMeDisc } from './AboutMeDisc'
 import { spawnApple } from './TreeGenerator'
 
 export class HoverController {
   private scene: BABYLON.Scene
   private cameraController: CameraController
   private gallery: ProjectGallery
+  private aboutMeDisc: AboutMeDisc | null
   private observer: BABYLON.Nullable<BABYLON.Observer<BABYLON.PointerInfo>>
   private currentHoveredId: string | null = null
+  private discHovered = false
 
   constructor(
     scene: BABYLON.Scene,
     cameraController: CameraController,
     gallery: ProjectGallery,
+    aboutMeDisc: AboutMeDisc | null = null,
   ) {
     this.scene = scene
     this.cameraController = cameraController
     this.gallery = gallery
+    this.aboutMeDisc = aboutMeDisc
 
     this.observer = scene.onPointerObservable.add((info) => {
       this.handlePointer(info)
@@ -45,6 +50,13 @@ export class HoverController {
       )
       const id: string | null = pick?.pickedMesh?.metadata?.projectId ?? null
       this.updateHover(id)
+
+      // Disc hover
+      const isDiscHit = pick?.pickedMesh?.metadata?.aboutMeDisc === true
+      if (isDiscHit !== this.discHovered) {
+        this.discHovered = isDiscHit
+        this.aboutMeDisc?.animateHover(isDiscHit)
+      }
     }
 
     if (info.type === BABYLON.PointerEventTypes.POINTERTAP) {
@@ -56,6 +68,8 @@ export class HoverController {
 
       if (id) {
         useSceneStore.getState().setSelectedProject(id)
+      } else if (pick?.pickedMesh?.metadata?.aboutMeDisc === true) {
+        useSceneStore.getState().setShowAboutMe(true)
       } else {
         // Check if a tree was tapped
         const treeMeta = pick?.pickedMesh?.metadata as {

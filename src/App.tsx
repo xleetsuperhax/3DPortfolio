@@ -2,6 +2,7 @@ import { CanvasWrapper } from './components/CanvasWrapper'
 import { InfoPanel } from './components/InfoPanel'
 import { NavHint } from './components/NavHint'
 import { InstructionsDialog } from './components/InstructionsDialog'
+import { AboutMeDialog } from './components/AboutMeDialog'
 import { InfoButton } from './components/InfoButton'
 import { NavigationControls } from './components/NavigationControls'
 import config from './config/projects'
@@ -21,6 +22,7 @@ export default function App() {
       <NavHint />
       <InfoButton />
       <InstructionsDialog />
+      <AboutMeDialog />
       <NavigationControls />
     </div>
   )

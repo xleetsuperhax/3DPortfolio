@@ -3,6 +3,7 @@ import { AppConfig } from '../types'
 import { CameraController } from './CameraController'
 import { ProjectGallery } from './ProjectGallery'
 import { HoverController } from './HoverController'
+import { AboutMeDisc } from './AboutMeDisc'
 import { createPixelGrassMaterial, createSkyboxMaterial } from './materials'
 import { populateTrees } from './TreeGenerator'
 
@@ -12,6 +13,7 @@ export class SceneManager {
   private cameraController: CameraController
   private hoverController: HoverController
   private gallery: ProjectGallery
+  private aboutMeDisc: AboutMeDisc
 
   constructor(canvas: HTMLCanvasElement, config: AppConfig) {
     const isMobile = window.devicePixelRatio > 2
@@ -71,6 +73,9 @@ export class SceneManager {
     // Gallery
     this.gallery = new ProjectGallery(this.scene, config)
 
+    // About Me disc — placed near camera spawn point
+    this.aboutMeDisc = new AboutMeDisc(this.scene)
+
     // Trees
     populateTrees(this.scene, config.gallery.arcRadius)
 
@@ -83,12 +88,15 @@ export class SceneManager {
         glow.addIncludedOnlyMesh(mesh as BABYLON.Mesh)
       }
     })
+    // Add the about me disc's glow ring to the whitelist
+    glow.addIncludedOnlyMesh(this.aboutMeDisc.getGlowMesh())
 
     // Hover controller
     this.hoverController = new HoverController(
       this.scene,
       this.cameraController,
       this.gallery,
+      this.aboutMeDisc,
     )
 
     // Render loop
@@ -105,6 +113,7 @@ export class SceneManager {
     this.cameraController.dispose()
     this.hoverController.dispose()
     this.gallery.dispose()
+    this.aboutMeDisc.dispose()
     this.scene.dispose()
     this.engine.dispose()
   }
