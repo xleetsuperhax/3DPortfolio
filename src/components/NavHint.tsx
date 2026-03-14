@@ -21,7 +21,8 @@ export function NavHint() {
     <div
       style={{
         position: 'fixed',
-        bottom: 32,
+        top: isTouchDevice ? 16 : 'auto',
+        bottom: isTouchDevice ? 'auto' : 32,
         left: '50%',
         transform: 'translateX(-50%)',
         color: 'rgba(255,255,255,0.35)',
