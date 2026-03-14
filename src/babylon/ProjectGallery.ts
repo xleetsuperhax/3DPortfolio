@@ -25,8 +25,12 @@ export class ProjectGallery {
     _spacing: number,
   ): void {
     const count = projects.length
-    const angleStep = count > 1 ? (Math.PI * 1.6) / (count - 1) : 0
-    const startAngle = -Math.PI * 0.8
+    // Keep all cards in the front hemisphere (|angle| < 90°) so their
+    // faces are visible from the camera at negative-Z. Cap span at ~153°
+    // so even with many cards they never wrap to the near side.
+    const arcSpan = Math.min(Math.PI * 0.85, (count - 1) * (Math.PI / 3))
+    const angleStep = count > 1 ? arcSpan / (count - 1) : 0
+    const startAngle = -(arcSpan / 2)
 
     for (let i = 0; i < count; i++) {
       const card = new ProjectCard(scene, projects[i])
