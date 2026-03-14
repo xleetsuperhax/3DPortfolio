@@ -16,15 +16,9 @@ export class SceneManager {
   private aboutMeDisc: AboutMeDisc
 
   constructor(canvas: HTMLCanvasElement, config: AppConfig) {
-    const isMobile = window.devicePixelRatio > 2
-
     this.engine = new BABYLON.Engine(canvas, true, {
       adaptToDeviceRatio: true,
     })
-
-    if (isMobile) {
-      this.engine.setHardwareScalingLevel(1.5)
-    }
 
     this.scene = new BABYLON.Scene(this.engine)
     this.scene.clearColor = new BABYLON.Color4(0, 0, 0, 1)
