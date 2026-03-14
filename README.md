@@ -1,4 +1,4 @@
-# 3DCV
+# 3DPortfolio
 
 An interactive 3D portfolio built with BabylonJS and React. Projects are displayed as clickable cards arranged in a 3D scene that you can orbit and explore.
 

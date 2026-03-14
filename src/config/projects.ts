@@ -26,7 +26,7 @@ const config: AppConfig = {
         'An interactive 3D space for exploring personal projects, built with BabylonJS and React.',
       tech: ['BabylonJS', 'React', 'TypeScript'],
       links: [
-        { label: 'View on GitHub', url: 'https://github.com/xleetsuperhax/3dcv' },
+        { label: 'View on GitHub', url: 'https://github.com/xleetsuperhax/3DPortfolio' },
       ],
       year: 2026,
       accentColor: '#7c3aed'
