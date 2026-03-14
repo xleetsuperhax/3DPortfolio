@@ -55,6 +55,18 @@ const config: AppConfig = {
       ],
       year: 2025,
       accentColor: '#10b981',
+    },
+    {
+      id: 'project-4',
+      title: 'Miscellanous project at Nordea',
+      description:
+        "Can't talk about them in detail here, but wanted to include anyways. During my time at Nordea, I created a bunch of internal tools to help with testing operations",
+      tech: ['Python', 'Robot Framework', 'Textual', 'Scripting', 'CLI',],
+      links: [
+        { label: "Nordea's website", url: 'https://www.nordea.com/en' },
+      ],
+      year: 2025,
+      accentColor: 'rgb(0, 30, 158)',
     }
   ],
 }

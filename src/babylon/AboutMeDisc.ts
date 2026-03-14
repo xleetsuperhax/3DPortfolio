@@ -7,7 +7,7 @@ import aboutConfig from '../config/about'
 // The disc sits just above the floor at z = -3.0 (between camera and gallery).
 const DISC_X = 0
 const DISC_Y = -1.46  // slightly above floor (y = -1.5) to avoid z-fighting
-const DISC_Z = -3.0
+const DISC_Z = 0
 
 const DISC_DIAMETER = 1.6
 const DISC_HEIGHT = 0.05
