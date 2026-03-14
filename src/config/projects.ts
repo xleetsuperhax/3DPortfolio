@@ -11,9 +11,9 @@ const config: AppConfig = {
     // How cards are arranged: "arc" | "grid" | "scatter"
     layout: 'arc',
     // Distance between cards (world units)
-    cardSpacing: 3.5,
+    cardSpacing: 2,
     // Radius of the arc (world units)
-    arcRadius: 6,
+    arcRadius: 4,
     // Scene background color (hex)
     backgroundColor: '#0a0a0f',
   },
@@ -21,7 +21,7 @@ const config: AppConfig = {
   projects: [
     {
       id: 'project-1',
-      title: '3D Portfolio (the one you are in right now!',
+      title: '3D Portfolio (This one!)',
       description:
         'An interactive 3D space for exploring personal projects, built with BabylonJS and React.',
       tech: ['BabylonJS', 'React', 'TypeScript'],
@@ -29,8 +29,7 @@ const config: AppConfig = {
         { label: 'View on GitHub', url: 'https://github.com/xleetsuperhax/3dcv' },
       ],
       year: 2026,
-      accentColor: '#7c3aed',
-      featured: true,
+      accentColor: '#7c3aed'
     },
     {
       id: 'project-2',
@@ -56,31 +55,7 @@ const config: AppConfig = {
       ],
       year: 2025,
       accentColor: '#10b981',
-    },
-    {
-      id: 'project-4',
-      title: 'Side Project',
-      description:
-        'A side project placeholder. Fill in your tech stack, description, and GitHub URL.',
-      tech: ['Place', 'Holder'],
-      links: [
-        { label: 'View on GitHub', url: 'https://github.com/yourusername/side' },
-      ],
-      year: 2023,
-      accentColor: '#f59e0b',
-    },
-    {
-      id: 'project-5',
-      title: 'Open Source Tool',
-      description:
-        'An open source tool placeholder. Describe what problem it solves for other developers.',
-      tech: ['Place', 'Holder'],
-      links: [
-        { label: 'View on GitHub', url: 'https://github.com/yourusername/tool' },
-      ],
-      year: 2023,
-      accentColor: '#ef4444',
-    },
+    }
   ],
 }
 
