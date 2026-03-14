@@ -76,7 +76,7 @@ export class SceneManager {
     // Glow layer — whitelist only accent border meshes so face/bg/back never
     // interfere with the bloom pass (avoids customEmissiveColorSelector side-effects)
     const glow = new BABYLON.GlowLayer('glow', this.scene)
-    glow.intensity = isMobile ? 0.1 : 0.2
+    glow.intensity = window.devicePixelRatio > 2 ? 0.1 : 0.2
     this.scene.meshes.forEach((mesh) => {
       if (mesh.name.startsWith('card_border_')) {
         glow.addIncludedOnlyMesh(mesh as BABYLON.Mesh)
