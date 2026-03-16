@@ -58,9 +58,9 @@ const config: AppConfig = {
     },
     {
       id: 'project-4',
-      title: 'Miscellanous project at Nordea',
+      title: 'Projects at Nordea',
       description:
-        "Can't talk about them in detail here, but wanted to include anyways. During my time at Nordea, I created a bunch of internal tools to help with testing operations",
+        "Can't talk about them in detail here, but wanted to include anyways. During my time at Nordea, I created a bunch of internal tools to help with testing operations. Got to explore applications that are run from the CLI and really cemented my love for CLI as a way to interact with software.",
       tech: ['Python', 'Robot Framework', 'Textual', 'Scripting', 'CLI',],
       links: [
         { label: "Nordea's website", url: 'https://www.nordea.com/en' },
