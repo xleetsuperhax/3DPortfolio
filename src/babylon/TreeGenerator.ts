@@ -193,20 +193,62 @@ export function spawnApple(scene: BABYLON.Scene, x: number, y: number, z: number
       { frame: rollFrames, value: apple.position.z + Math.sin(rollAngle) * rollDist },
     ])
 
-    scene.beginDirectAnimation(apple, [rollX, rollZ], 0, rollFrames, false)
-  })
-
-  // Fade out at 19s and dispose at 20s
-  setTimeout(() => {
-    const fadeAnim = new BABYLON.Animation(
-      'appleFade', 'visibility', 60,
+    // Spin the sprite to visually match the rolling distance
+    const spinRadians = rollDist / (size / 2)
+    const rollSpin = new BABYLON.Animation(
+      'appleRollSpin', 'rotation.z', 60,
       BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
     )
-    fadeAnim.setKeys([
-      { frame: 0, value: 1 },
-      { frame: 60, value: 0 },
+    rollSpin.setEasingFunction(rollEase)
+    rollSpin.setKeys([
+      { frame: 0, value: 0 },
+      { frame: rollFrames, value: spinRadians },
     ])
-    scene.beginDirectAnimation(apple, [fadeAnim], 0, 60, false, 1, () => {
+
+    scene.beginDirectAnimation(apple, [rollX, rollZ, rollSpin], 0, rollFrames, false)
+  })
+
+  // Void consumption at 19s: pulse outward then spiral-implode to nothing
+  setTimeout(() => {
+    const voidEase = new BABYLON.QuadraticEase()
+    voidEase.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEIN)
+
+    // scaling.x: 1 → 1.3 (pulse) then 1.3 → 0 (collapse)
+    const voidScaleX = new BABYLON.Animation(
+      'appleVoidScaleX', 'scaling.x', 60,
+      BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+    )
+    voidScaleX.setEasingFunction(voidEase)
+    voidScaleX.setKeys([
+      { frame: 0,  value: 1.0 },
+      { frame: 18, value: 1.3 },
+      { frame: 60, value: 0.0 },
+    ])
+
+    // scaling.y: mirrors scaling.x
+    const voidScaleY = new BABYLON.Animation(
+      'appleVoidScaleY', 'scaling.y', 60,
+      BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+    )
+    voidScaleY.setEasingFunction(voidEase)
+    voidScaleY.setKeys([
+      { frame: 0,  value: 1.0 },
+      { frame: 18, value: 1.3 },
+      { frame: 60, value: 0.0 },
+    ])
+
+    // rotation.z: spirals ~1.5 turns as it collapses
+    const voidSpin = new BABYLON.Animation(
+      'appleVoidSpin', 'rotation.z', 60,
+      BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+    )
+    voidSpin.setEasingFunction(voidEase)
+    voidSpin.setKeys([
+      { frame: 0,  value: apple.rotation.z },
+      { frame: 60, value: apple.rotation.z + Math.PI * 3 },
+    ])
+
+    scene.beginDirectAnimation(apple, [voidScaleX, voidScaleY, voidSpin], 0, 60, false, 1, () => {
       apple.dispose()
       tex.dispose()
       mat.dispose()

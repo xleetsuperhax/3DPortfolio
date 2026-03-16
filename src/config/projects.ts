@@ -66,7 +66,7 @@ const config: AppConfig = {
         { label: "Nordea's website", url: 'https://www.nordea.com/en' },
       ],
       year: 2025,
-      accentColor: 'rgb(0, 30, 158)',
+      accentColor: '#3b82f6',
     }
   ],
 }

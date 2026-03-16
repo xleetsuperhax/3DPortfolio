@@ -68,19 +68,21 @@ export interface AboutConfig {
 
 const aboutConfig: AboutConfig = {
   name: 'Roni Sheitanov',
-  title: 'Test Automation Engineer',
+  title: 'Test Automation Engineer / AI-driven Development Hobbyist',
 
   summary:
     'QA-enthusiast who thinks about quality holistically — not just as a step in the SDLC. ' +
     'I have experience in QA within Fintech and my goal is to become an expert people can rely on. ' +
     'Currently focused on integrating AI into QA in ways that genuinely serve the process. ' +
     'Also passionate about UX and accessibility — I wrote my thesis on accessibility test automation ' +
-    'and built an open-source library for it. I embrace unfamiliar technologies and people describe ' +
-    'me as sociable, easy-to-approach, and curious.',
+    'and built an open-source library for it. ' +
+    'On my free time I experiment with AI-assisted development, aiming to become proficient ' +
+    'with these tools and embracing unfamiliar technologies to deepen my understanding of software. ' +
+    'People describe me as sociable, easy-to-approach, and curious.',
 
   contact: {
     email: 'ronishei.georgiev@gmail.com',
-    linkedin: 'https://www.linkedin.com/in/ronisheitanov-a83690192',
+    linkedin: 'https://www.linkedin.com/in/roni-sheitanov-a83690192',
     location: 'Oulu, Finland',
   },
 
@@ -158,13 +160,15 @@ const aboutConfig: AboutConfig = {
     tools: [
       'Jira', 'Confluence', 'Tricentis qTest', 'BrowserStack',
       'Git', 'GitHub', 'Bitbucket', 'GitHub Copilot',
-      'Android SDK', 'Postman', 'Bruno',
+      'Android SDK', 'Postman', 'Bruno', 'Claude Code',
     ],
     competencies: [
       'Test Automation', 'Manual Testing', 'API Testing', 'Web Testing',
       'Mobile Testing', 'UI Testing', 'System Testing', 'Regression Testing',
-      'Test Planning', 'Test Design', 'BDD', 'CI/CD',
-      'Agile', 'SAFE', 'Prompt Engineering', 'Software Documentation',
+      'Test Planning', 'Test Design', 'Test Engineering', 'Test Cases',
+      'BDD', 'CI/CD', 'Agile', 'SAFE', 'Scripting', 'Libraries',
+      'Prompt Generation', 'Software Documentation',
+      'Troubleshooting', 'Problem Solving', 'Communication', 'Facilitation', 'Presenting',
     ],
   },
 

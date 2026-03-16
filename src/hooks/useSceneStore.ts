@@ -6,11 +6,13 @@ interface SceneState {
   cameraInputEnabled: boolean
   showInstructions: boolean
   showAboutMe: boolean
+  cameraBlockedHint: boolean
   setHoveredProject: (id: string | null) => void
   setSelectedProject: (id: string | null) => void
   setCameraInputEnabled: (enabled: boolean) => void
   setShowInstructions: (show: boolean) => void
   setShowAboutMe: (show: boolean) => void
+  setCameraBlockedHint: (show: boolean) => void
 }
 
 export const useSceneStore = create<SceneState>((set) => ({
@@ -19,6 +21,7 @@ export const useSceneStore = create<SceneState>((set) => ({
   cameraInputEnabled: false,
   showInstructions: true,
   showAboutMe: false,
+  cameraBlockedHint: false,
   setHoveredProject: (id) => set({ hoveredProjectId: id }),
   setSelectedProject: (id) =>
     set((state) => ({
@@ -36,4 +39,5 @@ export const useSceneStore = create<SceneState>((set) => ({
       showAboutMe: show,
       cameraInputEnabled: !show && state.selectedProjectId === null && !state.showInstructions,
     })),
+  setCameraBlockedHint: (show) => set({ cameraBlockedHint: show }),
 }))
