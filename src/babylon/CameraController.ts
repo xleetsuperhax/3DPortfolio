@@ -11,6 +11,7 @@ export class CameraController {
   private navStartHandler: ((e: Event) => void) | null = null
   private navStopHandler: ((e: Event) => void) | null = null
   private renderObserver: BABYLON.Observer<BABYLON.Scene> | null = null
+  private blockedHandler: ((e: PointerEvent) => void) | null = null
 
   constructor(scene: BABYLON.Scene, arcRadius: number) {
     this.camera = new BABYLON.ArcRotateCamera(
@@ -116,15 +117,21 @@ export class CameraController {
   }
 
   setInputEnabled(enabled: boolean): void {
+    const canvas = this.camera.getScene().getEngine().getRenderingCanvas()!
     if (enabled) {
-      this.camera.attachControl(
-        this.camera.getScene().getEngine().getRenderingCanvas()!,
-        true,
-      )
+      this.camera.attachControl(canvas, true)
+      if (this.blockedHandler) {
+        canvas.removeEventListener('pointerdown', this.blockedHandler as EventListener)
+        this.blockedHandler = null
+      }
     } else {
       this.camera.detachControl()
       // Clear any held nav states when input is disabled
       this.navActive.clear()
+      this.blockedHandler = () => {
+        useSceneStore.getState().setCameraBlockedHint(true)
+      }
+      canvas.addEventListener('pointerdown', this.blockedHandler as EventListener)
     }
   }
 
@@ -140,6 +147,10 @@ export class CameraController {
     if (this.navStopHandler) window.removeEventListener('camera:navStop', this.navStopHandler)
     if (this.renderObserver) {
       this.camera.getScene().onBeforeRenderObservable.remove(this.renderObserver)
+    }
+    const canvas = this.camera.getScene().getEngine().getRenderingCanvas()
+    if (this.blockedHandler && canvas) {
+      canvas.removeEventListener('pointerdown', this.blockedHandler as EventListener)
     }
   }
 }
